@@ -2,71 +2,37 @@
 
 class Autoloader
 {
-    protected static $fileExt = '.php';
-
-    protected static $pathsTop;
-
     protected static $excludePath;
-
-    protected static $fileIterator = null;
 
     private static $addedPaths = [];
 
-    public static function loadInterfaces($className)
+    public static function load($class, $paste)
     {
-        self::load($className);
-    }
+        $dir = __DIR__ . "\\" . $paste;
 
-    public static function loadCore($className) {
-        self::load($className);
-    }
+        if(in_array($dir, self::$addedPaths) || strpos($dir, self::$excludePath) !== false) {
+            return;
+        }
 
-    public static function loadApp($className) {
-        self::load($className);
-    }
-
-    public static function load($className) {
-        foreach(self::$pathsTop as $pathTop)
-        {
-            $directory = new RecursiveDirectoryIterator($pathTop, RecursiveDirectoryIterator::SKIP_DOTS);
-
-            static::$fileIterator = new RecursiveIteratorIterator($directory, RecursiveIteratorIterator::LEAVES_ONLY);
-
-            $filename = $className . static::$fileExt;
-
-            foreach (static::$fileIterator as $file) {
-                if($file->getPathInfo()->getFileName() == self::$excludePath ||
-                    $file->getPathInfo()->getPathInfo()->getFileName() == self::$excludePath) {
-                    continue;
+        foreach ( scandir( $dir ) as $file ) {
+            if ( substr( $file, 0, 2 ) !== '._' && preg_match( "/.php$/i" , $file ) ) {
+                require $dir . "\\" . $file;
+            }else{
+                if($file != '.' && $file != '..'){
+                    self::load($class, $paste . "\\" . $file);
                 }
-
-                if ($file->isReadable()) {
-                    var_dump($file->getPathname() . '<br>');
-                    if(in_array($file->getPathname(), self::$addedPaths)) {
-                        continue;
-                    }
-
-                    self::$addedPaths[] = $file->getPathname();
-                    include_once $file->getPathname();
-                }
-
             }
         }
+
+        self::$addedPaths[] = $dir;
     }
 
-    public static function setFileExt($fileExt)
+    public static function autoloadsystem($class)
     {
-        static::$fileExt = $fileExt;
-    }
-
-    public static function setPaths($paths)
-    {
-        static::$pathsTop = $paths;
-    }
-
-    public static function setExcludePath($excludePath)
-    {
-        static::$excludePath = $excludePath;
+        self::$excludePath = __DIR__ . '\\app\\views';
+        self::load($class, 'core\\interfaces');
+        self::load($class, 'core');
+        self::load($class, 'app');
     }
 
 }

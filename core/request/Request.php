@@ -18,7 +18,7 @@ class Request implements IRequest
      */
     public function setPath(): void
     {
-        $this->path = ltrim($this->getParseUrl()['path'], '/');;
+        $this->path = $this->getParseUrl()['path'];
     }
 
     public function getPath(): string

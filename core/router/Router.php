@@ -22,12 +22,13 @@ class Router implements IRouter
     private function setControllerName(): void
     {
         $path = App::$app->request->getPath();
+        $route = App::$app->config['route'];
 
-        $controllerName = App::$app->config['defaultController'] . 'Controller';
+        $controllerName = '';
 
-        if($path) {
-            $pathSplit = explode('/', $path);
-            $controllerName = ucfirst(strtolower($pathSplit[0]));
+        if(isset($route[$path])) {
+            $routeArr = explode('/', $route[$path]);
+            $controllerName = $routeArr[0];
         }
 
         $this->controllerName = $controllerName;
@@ -45,15 +46,20 @@ class Router implements IRouter
     private function setActionName(): void
     {
         $path = App::$app->request->getPath();
+        $route = App::$app->config['route'];
 
-        $actionName = 'Index';
+        $actionName = '';
 
-        $pathSplit = explode('/', $path);
-        if(isset($pathSplit[1])) {
-            $actionName = strtolower($pathSplit[1]);
+        if(isset($route[$path])) {
+            $routeArr = explode('/', $route[$path]);
+            $actionName = $routeArr[1];
         }
 
-        $this->actionName = 'action' . $actionName;
+        if($actionName) {
+            $actionName = 'action' . ucfirst($actionName);
+        }
+
+        $this->actionName = $actionName;
     }
 
     /**
@@ -70,6 +76,11 @@ class Router implements IRouter
 
     public function run(): void
     {
+        if(!$this->controllerName || !$this->actionName) {
+            $this->controllerName = 'NotFoundController';
+            $this->actionName = 'actionIndex';
+        }
+
         $controller = new (self::CONTROLLER_NAMESPACE . '\\' . self::getControllerName());
         $actionFunction = $this->getActionName();
         $controller->$actionFunction();

@@ -7,6 +7,6 @@ interface IRequest
     public function setPath(): void;
     public function getPath(): string;
 
-    public function get(): array;
-    public function post(): array;
+    public function get(string $name): array;
+    public function post(string $name): array;
 }

@@ -26,14 +26,14 @@ class Request implements IRequest
         return $this->path;
     }
 
-    public function get(): array
+    public function get(string $name): array
     {
-        return $_GET;
+        return @$_GET[$name];
     }
 
-    public function post(): array
+    public function post(string $name): array
     {
-        return $_POST;
+        return @$_POST[$name];
     }
 
     private function getParseUrl(): array {

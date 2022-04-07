@@ -26,17 +26,34 @@ class Request implements IRequest
         return $this->path;
     }
 
-    public function get(string $name): array
+    public function get(string $name = '')
     {
-        return @$_GET[$name];
+        return $name ? @$_GET[$name] : $_GET;
     }
 
-    public function post(string $name): array
+    public function post(string $name = '')
     {
-        return @$_POST[$name];
+        return $name ? @$_POST[$name] : $_POST;
     }
 
     private function getParseUrl(): array {
         return parse_url($_SERVER["REQUEST_URI"]);
+    }
+
+    public function isPost(): bool
+    {
+        return $_SERVER['REQUEST_METHOD'] === 'POST';
+    }
+
+    public function isAjax(): bool
+    {
+        return isset($_SERVER['HTTP_X_REQUESTED_WITH']) &&
+            strcasecmp($_SERVER['HTTP_X_REQUESTED_WITH'], 'xmlhttprequest') == 0;
+    }
+
+    public function redirect(string $url)
+    {
+        header('Location: '.$url);
+        exit;
     }
 }

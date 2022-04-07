@@ -4,5 +4,5 @@ namespace app\interfaces;
 
 interface IUserService
 {
-    public function login($username, $password): bool;
+    public static function getUser(string $username, string $password): array;
 }

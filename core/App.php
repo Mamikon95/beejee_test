@@ -6,9 +6,11 @@ use core\db\Db;
 use core\interfaces\IApp;
 use core\request\Request;
 use core\router\Router;
+use core\session\Session;
 
 final class App implements IApp
 {
+    public Session $session;
     public Request $request;
     public Router $router;
     public Db $db;
@@ -25,6 +27,7 @@ final class App implements IApp
         self::$app = $this;
         $this->_initDB();
         $this->_initRequest();
+        $this->_initSession();
         $this->_initRouter();
     }
 
@@ -41,6 +44,11 @@ final class App implements IApp
     private function _initRequest(): void
     {
         $this->request = new Request();
+    }
+
+    private function _initSession(): void
+    {
+        $this->session = new Session();
     }
 
     private function _initRouter(): void

@@ -2,20 +2,19 @@
 
 namespace app\services;
 
-use app\interfaces\ITaskService;
 use app\interfaces\IUserService;
+use app\models\UserModel;
+use core\App;
 
 class UserService implements IUserService
 {
-    protected $userModel;
-
-    public function __construct($userModel)
+    public static function getUser(string $username, string $password): array
     {
-        $this->userModel = $userModel;
-    }
+        $connection = App::$app->db->getConnection();
+        $prepare = $connection->prepare('SELECT * FROM ' . UserModel::getTableName() . ' WHERE username = ? AND password = ? LIMIT 1');
+        $prepare->execute([$username, $password]);
+        $data = $prepare->fetch(\PDO::FETCH_ASSOC);
 
-    public function login($username, $password): bool
-    {
-        return true;
+        return $data ? $data : [];
     }
 }

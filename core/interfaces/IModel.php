@@ -4,5 +4,5 @@ namespace core\interfaces;
 
 interface IModel
 {
-    public function load(array $data): bool;
+    public function load(array $data, bool $widthId = false): bool;
 }

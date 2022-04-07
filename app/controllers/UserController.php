@@ -12,7 +12,8 @@ class UserController extends BaseController
 {
     public function actionLogin()
     {
-        if(!UserAuthService::isGuest()) {
+        if(!UserAuthService::isGuest())
+        {
             App::$app->request->redirect('/task/index');
         }
 

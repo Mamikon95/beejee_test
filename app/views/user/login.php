@@ -5,12 +5,12 @@
     <div class="card-body">
         <form action="/user/login" method="post">
             <div class="form-group">
-                <label for="exampleInputEmail1">Имя пользователя:</label>
-                <input type="text" name="username" class="form-control" placeholder="Введите имя пользователя">
+                <label for="username">Имя пользователя:</label>
+                <input type="text" name="username" id="username" class="form-control" placeholder="Введите имя пользователя" required>
             </div>
             <div class="form-group">
-                <label for="exampleInputPassword1">Пароль</label>
-                <input type="password" name="password" class="form-control" placeholder="Введите пароль">
+                <label for="password">Пароль</label>
+                <input type="password" name="password" id="password" class="form-control" placeholder="Введите пароль" required>
             </div>
             <button type="submit" class="btn btn-primary">Войти</button>
         </form>

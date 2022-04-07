@@ -22,7 +22,7 @@ class UserAuthService implements IUserAuthService
         $this->userModel->username = Formatter::dbEscapeString($this->userModel->username);
         $findUser = UserService::getUser($this->userModel->username, $this->userModel->password);
 
-        if($findUser && $this->userModel->load($findUser)) {
+        if($findUser && $this->userModel->load($findUser, true)) {
             return App::$app->session->set('userId', $this->userModel->id);
         }
 
